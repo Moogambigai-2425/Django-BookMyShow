@@ -41,6 +41,12 @@
                             <i class="fas fa-users"></i> Cast: {{ movie.cast }}
                         </small>
                     </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                          <i class="fas fa-tag"></i> Genres: {{ movie.genres }}
+                        </small>
+                    </p>
+
                 </div>
                 <div class="card-footer bg-white border-top-0">
                     <a href="{% url 'theater_list' movie.id %}" class="btn btn-outline-primary btn-block">

@@ -1,0 +1,28 @@
+def recommend_movies_based_on_booking_history(user):
+    """
+    Recommend movies to the user based on booking history similarity.
+    Logic:
+    1. Find movies the user has booked.
+    2. Find other users who have booked those movies.
+    3. Find movies those users have booked that the current user hasn't.
+    4. Order movies by popularity among these similar users.
+    """
+    # Step 1: Get movie ids booked by current user
+    user_booked_movie_ids = Booking.objects.filter(user=user).values_list('movie_id', flat=True)
+    if not user_booked_movie_ids:
+        # If user has no bookings, recommend some popular movies (e.g., top 10 by total bookings)
+        popular_movies = Movie.objects.annotate(booking_count=Count('booking')).order_by('-booking_count')[:10]
+        return popular_movies
+    # Step 2: Find other users who booked the same movies
+    other_user_ids = Booking.objects.filter(movie_id__in=user_booked_movie_ids).exclude(user=user).values_list('user_id', flat=True).distinct()
+    if not other_user_ids:
+        # No other users found who booked same movies, fallback to popular movies
+        popular_movies = Movie.objects.annotate(booking_count=Count('booking')).order_by('-booking_count')[:10]
+        return popular_movies
+    # Step 3: Find movies booked by these other users excluding movies already booked by current user
+    recommended_movies = Movie.objects.filter(booking_user_idin=other_user_ids).exclude(id_in=user_booked_movie_ids).annotate(popularity=Count('booking')).order_by('-popularity').distinct()
+    return recommended_movies
+@login_required
+def dashboard(request):
+    recommendations = recommend_movies_based_on_booking_history(request.user)
+    return render(request, 'users/dashboard.html', {'recommendations': recommendations})

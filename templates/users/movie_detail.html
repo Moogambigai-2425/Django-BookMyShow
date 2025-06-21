@@ -1,0 +1,14 @@
+{% extends "users/basic.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ movie.name }}</h1>
+    <img src="{{ movie.image.url }}" alt="{{ movie.name }}" class="img-fluid">
+    <br>
+    <p><strong>Rating:</strong> {{ movie.rating }}</p>
+    <p><strong>Cast:</strong> {{ movie.cast }}</p>
+    <p><strong>Description:</strong> {{ movie.description }}</p>
+    <p><strong>Genres:</strong> {{ movie.genres}}</p>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock %}

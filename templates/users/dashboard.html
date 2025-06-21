@@ -1,0 +1,28 @@
+{% extends "users/basic.html" %} 
+{% block content %}
+<div class="container mt-5">
+    <h4 class="section-title">Recommended Movies for You</h4>
+    <div class="row">
+        {% if recommendations %}
+            {% for movie in recommendations %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.name }}</h5>
+                            <p class="card-text">Rating: {{ movie.rating }}</p>
+                            <a href="{% url 'movie_detail' movie.id %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    You have booked movies but no recommendations are available at the moment. Please explore more to get personalized recommendations!
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
